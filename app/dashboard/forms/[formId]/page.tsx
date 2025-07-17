@@ -11,14 +11,13 @@ import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-export default async function FormDetailsPage({
-  params,
-}: {
-  params: { formId: string };
-}) {
+interface PageProps {
+  params: Promise<{ formId: string }>;
+}
+
+export default async function FormDetailsPage({ params }: PageProps) {
   const { userId, redirectToSignIn } = await auth();
   const { formId } = await params;
-  console.log("FORM ID +++++++++++++++++++++++++++++++++++ ", formId);
 
   if (!userId) return redirectToSignIn();
 
