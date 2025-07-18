@@ -24,7 +24,7 @@ model User {
 }
 
 model Form {
-  id          String         @id @default(cuid())
+  id          String         @id @unique @default(cuid())
   title       String
   description String?
   questions   Question[]

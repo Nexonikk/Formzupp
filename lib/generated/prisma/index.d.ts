@@ -7105,7 +7105,7 @@ export namespace Prisma {
     questions?: QuestionListRelationFilter
     responses?: FormResponseListRelationFilter
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id">
+  }, "id" | "id">
 
   export type FormOrderByWithAggregationInput = {
     id?: SortOrder
