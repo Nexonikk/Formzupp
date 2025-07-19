@@ -1,6 +1,6 @@
 "use client";
 
-import { Question } from "@/lib/generated/prisma";
+import { Question } from "@prisma/client";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
