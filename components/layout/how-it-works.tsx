@@ -60,7 +60,7 @@ const HowItWorks = () => {
           {steps.map((step, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-background hover:border-emerald-200 hover:border-2 rounded-xl shadow-md p-8 text-center relative z-10 transition-all duration-500 transform-3d ease-in-out"
+              className="bg-white dark:bg-background border border-transparent hover:scale-105 rounded-xl shadow-md p-8 text-center relative z-10 transition-all duration-500 transform"
             >
               <div className="flex justify-center">{step.icon}</div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
