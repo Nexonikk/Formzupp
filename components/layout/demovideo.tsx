@@ -211,7 +211,11 @@ export default function SafariDemo() {
           }}
           className="relative"
         >
-          <Safari className="w-full h-auto" />
+          <Safari
+            url="formzupp.vercel.app"
+            className="w-full h-full"
+            videoSrc="/Formzupp-tutorial.mp4"
+          />
         </motion.div>
       </div>
     </div>

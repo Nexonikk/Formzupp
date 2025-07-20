@@ -16,12 +16,12 @@ const faqs = [
       "Because you deserve better than a spreadsheet in disguise. Formzupp lets you create forms that are modern cool, not a pop quiz from your least favorite teacher.",
   },
   {
-    question: "Is Form Axis really AI-powered, or is it just a fancy buzzword?",
+    question: "Is Formzupp really AI-powered, or is it just a fancy buzzword?",
     answer:
       "It's real AI. No smoke, no mirrors, and definitely no interns pretending to be chatbots. Our forms are powered by Gemini, not by someone frantically typing answers in the background.",
   },
   {
-    question: "Is Form Axis actually free?",
+    question: "Is Formzupp actually free?",
     answer: `Free until my server bill hits like a meteor. When that invoice lands, you might see a ‘Save My Soul’ button pop up. Till then, mooch away!`,
   },
   {

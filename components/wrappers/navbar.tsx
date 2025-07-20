@@ -45,8 +45,8 @@ export function NavBar() {
               <SheetContent side="left" className="w-[260px]">
                 <SheetHeader className="border-b pb-4 mb-4">
                   <SheetTitle className="flex items-center gap-2">
-                    <LucideFileAxis3D className="text-[#92f8d8] h-5 w-5" />
-                    <span className="font-semibold text-lg">Form Axis</span>
+                    <LucideFileAxis3D className="text-emerald-500 h-5 w-5" />
+                    <span className="font-semibold text-lg">Formzupp</span>
                   </SheetTitle>
                 </SheetHeader>
 
