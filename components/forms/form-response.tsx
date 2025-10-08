@@ -22,8 +22,6 @@ export default function FormResponse({ response }: ResponseProps) {
   const formattedDate = new Date(response.createdAt).toLocaleDateString();
   const formattedTime = new Date(response.createdAt).toLocaleTimeString();
 
-  console.log(response);
-
   return (
     <Card>
       <CardHeader>

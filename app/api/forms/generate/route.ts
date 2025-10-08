@@ -42,8 +42,6 @@ export async function POST(req: NextRequest) {
       topics
     );
 
-    console.log(`Generated form data using ${provider}:`, generatedForm);
-
     return NextResponse.json({
       title: generatedForm.title,
       description: generatedForm.description,

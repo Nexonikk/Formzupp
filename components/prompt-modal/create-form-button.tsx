@@ -28,7 +28,6 @@ export default function CreateFormButton({ label }: Props) {
     topics?: string;
   }) => {
     try {
-      console.log("under handleSubmitPrompt:", prompt, topics);
       setIsLoading(true);
       const response = await fetch("/api/forms/generate", {
         method: "POST",
@@ -51,6 +50,7 @@ export default function CreateFormButton({ label }: Props) {
       };
 
       setGeneratedForm(finalFormData);
+
       router.push(`/dashboard/forms/create`);
       setShowPromptModal(false);
       toast.success("Form generated successfully!");

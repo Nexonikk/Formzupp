@@ -21,8 +21,6 @@ export default async function PublicFormPage({
     },
   });
 
-  console.log(form);
-
   if (!form) {
     return notFound();
   }

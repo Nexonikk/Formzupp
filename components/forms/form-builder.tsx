@@ -143,8 +143,6 @@ export default function FormBuilder({
         description: "Your form has been saved successfully.",
       });
 
-      console.log(`Form saved successfully! LASTEST ID : ${data.id}`);
-
       if (!isEditing) {
         resetForm();
       }

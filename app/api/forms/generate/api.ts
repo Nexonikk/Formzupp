@@ -3,44 +3,54 @@ import { getFormGenPrompt } from "@/lib/prompt";
 import { FormGeneration, formGenerationSchema } from "@/lib/schema";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
+// Define a common interface for the response to ensure consistency.
 interface AIResponse {
   data: FormGeneration;
   provider: "gemini" | "mistral";
 }
 
+//  * Calls the Google Gemini API to generate form questions.
 async function callGeminiAPI(
   prompt: string,
   topics?: string
 ): Promise<FormGeneration> {
   if (!process.env.GEMINI_API_KEY) {
-    throw new Error("Missing Gemini API Key");
+    throw new Error("Missing Gemini API Key in environment variables.");
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${apiKey}`;
 
-  const formGenerationPrompt = getFormGenPrompt({
-    prompt,
-    topics,
-  });
+  const formGenerationPrompt = getFormGenPrompt({ prompt, topics });
 
   const fullJsonSchema = zodToJsonSchema(
     formGenerationSchema,
     "formGenerationSchema"
   );
+  const unwrappedSchema = fullJsonSchema.definitions?.formGenerationSchema;
 
-  let unwrappedSchema = fullJsonSchema.definitions?.formGenerationSchema;
-  if (!unwrappedSchema) {
-    throw new Error("Failed to generate schema definition");
+  if (
+    !unwrappedSchema ||
+    typeof unwrappedSchema !== "object" ||
+    !("properties" in unwrappedSchema)
+  ) {
+    throw new Error(
+      "Failed to generate a valid object schema definition from Zod."
+    );
   }
 
-  unwrappedSchema = removeAdditionalProperties(unwrappedSchema);
+  const cleanedSchema = removeAdditionalProperties(unwrappedSchema);
 
+  // FIX: Reverted to the simpler payload structure using responseMimeType and responseSchema.
   const payload = {
-    contents: [{ role: "user", parts: [{ text: formGenerationPrompt }] }],
+    contents: [{ parts: [{ text: formGenerationPrompt }] }],
     generationConfig: {
       responseMimeType: "application/json",
-      responseSchema: unwrappedSchema,
+      responseSchema: {
+        type: "OBJECT",
+        properties: cleanedSchema.properties,
+        required: cleanedSchema.required,
+      },
       temperature: 0.7,
     },
     safetySettings: [
@@ -71,9 +81,12 @@ async function callGeminiAPI(
   }
 
   const apiResponse = await response.json();
-  const generatedText = apiResponse.candidates[0].content.parts[0].text;
+  const generatedText = apiResponse.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!generatedText) {
+    throw new Error("Invalid response structure from Gemini API.");
+  }
+
   const formData = JSON.parse(generatedText);
-  // Debug log removed for production
   return formData as FormGeneration;
 }
 
@@ -82,28 +95,13 @@ async function callMistralAPI(
   topics?: string
 ): Promise<FormGeneration> {
   if (!process.env.MISTRAL_API_KEY) {
-    throw new Error("Missing Mistral API Key");
+    throw new Error("Missing Mistral API Key in environment variables.");
   }
 
   const apiKey = process.env.MISTRAL_API_KEY;
   const apiUrl = "https://api.mistral.ai/v1/chat/completions";
 
-  const formGenerationPrompt = getFormGenPrompt({
-    prompt,
-    topics,
-  });
-
-  const fullJsonSchema = zodToJsonSchema(
-    formGenerationSchema,
-    "formGenerationSchema"
-  );
-
-  let unwrappedSchema = fullJsonSchema.definitions?.formGenerationSchema;
-  if (!unwrappedSchema) {
-    throw new Error("Failed to generate schema definition");
-  }
-
-  unwrappedSchema = removeAdditionalProperties(unwrappedSchema);
+  const formGenerationPrompt = getFormGenPrompt({ prompt, topics });
 
   const payload = {
     model: "mistral-large-latest",
@@ -115,10 +113,9 @@ async function callMistralAPI(
     ],
     response_format: {
       type: "json_object",
-      schema: unwrappedSchema,
     },
     temperature: 0.7,
-    max_tokens: 2000,
+    max_tokens: 4096,
   };
 
   const response = await fetch(apiUrl, {
@@ -138,27 +135,36 @@ async function callMistralAPI(
     );
     throw new Error(
       `Mistral API request failed with status ${response.status}: ${
-        errorBody.error?.message || "Unknown error"
+        errorBody.message || JSON.stringify(errorBody)
       }`
     );
   }
 
   const apiResponse = await response.json();
-  const generatedText = apiResponse.choices[0].message.content;
+  const generatedText = apiResponse.choices?.[0]?.message?.content;
+  if (!generatedText) {
+    throw new Error("Invalid response structure from Mistral API.");
+  }
+
   const formData = JSON.parse(generatedText);
-  // Debug log removed for production
+
+  if (formData.questions && Array.isArray(formData.questions)) {
+    formData.questions = formData.questions.map((q: any) => ({
+      content: q.question_text || q.content || q.text,
+      required: q.required,
+      type: q.field_type || q.type,
+    }));
+  }
+
   return formData as FormGeneration;
 }
 
-// ----------------------------------------------
-
+//  Main function. Tries to generate form questions using Gemini first, then falls back to Mistral if the primary provider fails.
 export async function generateFormQuestions(
   prompt: string,
   topics?: string
 ): Promise<AIResponse> {
-  // Try Gemini first
   try {
-    // Debug log removed for production
     const geminiData = await callGeminiAPI(prompt, topics);
     return {
       data: geminiData,
@@ -166,10 +172,7 @@ export async function generateFormQuestions(
     };
   } catch (geminiError) {
     console.error("Gemini failed, falling back to Mistral:", geminiError);
-
-    // If Gemini fails, try Mistral
     try {
-      // Debug log removed for production
       const mistralData = await callMistralAPI(prompt, topics);
       return {
         data: mistralData,
@@ -178,11 +181,16 @@ export async function generateFormQuestions(
     } catch (mistralError) {
       console.error("Both Gemini and Mistral failed:", {
         geminiError:
-          geminiError instanceof Error ? geminiError.message : geminiError,
+          geminiError instanceof Error
+            ? geminiError.message
+            : String(geminiError),
         mistralError:
-          mistralError instanceof Error ? mistralError.message : mistralError,
+          mistralError instanceof Error
+            ? mistralError.message
+            : String(mistralError),
       });
 
+      // This error will be caught by the route handler and result in a 500 response.
       throw new Error(
         "All AI providers failed to generate the form. Please try again later."
       );

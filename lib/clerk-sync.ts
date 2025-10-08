@@ -5,8 +5,8 @@ export async function syncUserWithDatabase() {
   try {
     const { userId } = await auth();
     const user = await currentUser();
-    
-    if(!userId || !user) {
+
+    if (!userId || !user) {
       console.error("No authenticated user found");
       return null;
     }
@@ -14,21 +14,20 @@ export async function syncUserWithDatabase() {
     // upsert user to datbase
     const dbUser = await prisma.user.upsert({
       where: {
-        id: userId
+        id: userId,
       },
       update: {
         email: user.emailAddresses[0]?.emailAddress || "",
-        username: user.username || user.firstName || "user"
+        username: user.username || user.firstName || "user",
       },
       create: {
         id: userId,
         email: user.emailAddresses[0]?.emailAddress || "",
-        username: user.username || user.firstName || "user"
-      }
-    })
-    console.log("User synced with database:", dbUser.id);
+        username: user.username || user.firstName || "user",
+      },
+    });
     return dbUser;
-  } catch(error) {
+  } catch (error) {
     console.error("Error syncing user with database:", error);
     return null;
   }
