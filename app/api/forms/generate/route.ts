@@ -37,18 +37,31 @@ export async function POST(req: NextRequest) {
     }
 
     const { prompt, topics } = validationResult.data;
-    const generatedForm = await generateFormQuestions(prompt, topics);
+    const { data: generatedForm, provider } = await generateFormQuestions(
+      prompt,
+      topics
+    );
 
-    console.log("Generated form data:", generatedForm);
+    console.log(`Generated form data using ${provider}:`, generatedForm);
 
     return NextResponse.json({
       title: generatedForm.title,
       description: generatedForm.description,
       questions: generatedForm.questions,
       prompt,
+      provider,
     });
   } catch (error) {
     console.error("Error in form generation API:", error);
+
+    // Check if it's a rate limit error
+    if (error && typeof error === "object" && "msBeforeNext" in error) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     return NextResponse.json(
       { error: "Failed to generate form. Please try again later." },
       { status: 500 }
