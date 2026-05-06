@@ -13,15 +13,7 @@ import { ShinyTag } from "../ui/shiny-tag";
 import { BentoCard, BentoGrid } from "../magicui/bento-grid";
 import { ReactNode } from "react";
 
-interface Feature {
-  Icon: React.ElementType;
-  name: string;
-  description: string;
-  href: string;
-  cta: string;
-  background: ReactNode;
-  className: string;
-}
+import { Feature } from "@/types/features";
 
 const features: Feature[] = [
   {

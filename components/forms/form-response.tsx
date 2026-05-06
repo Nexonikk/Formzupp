@@ -1,22 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
-type ResponseProps = {
-  response: {
-    id: string;
-    createdAt: Date;
-    respondentName: string | null;
-    respondentEmail: string | null;
-    answers: {
-      id: string;
-      text: string;
-      question: {
-        id: string;
-        text: string;
-        order: number;
-      };
-    }[];
-  };
-};
+import { ResponseProps } from "@/types/form-response";
 
 export default function FormResponse({ response }: ResponseProps) {
   const formattedDate = new Date(response.createdAt).toLocaleDateString();

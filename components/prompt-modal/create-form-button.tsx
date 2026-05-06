@@ -7,14 +7,12 @@ import { AddPromptModal } from "./add-prompt-modal";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useFormStore } from "@/store/FormStore";
-import { FormGeneration } from "@/lib/schema";
+import { FormGeneration } from "@/types/schema";
 import { generateRandomId } from "@/lib/utils";
 
-type Props = {
-  label?: string;
-};
+import { CreateFormButtonProps } from "@/types/create-form-button";
 
-export default function CreateFormButton({ label }: Props) {
+export default function CreateFormButton({ label }: CreateFormButtonProps) {
   const [showPromptModal, setShowPromptModal] = useState(false);
   const { setGeneratedForm } = useFormStore.getState();
   const [isLoading, setIsLoading] = useState(false);

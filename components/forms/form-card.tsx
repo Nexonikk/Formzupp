@@ -10,13 +10,7 @@ import {
 } from "../ui/card";
 import DeleteFormButton from "./delete-form-button";
 
-type FormCardProps = {
-  id: string;
-  title: string;
-  description?: string | null;
-  responsesCount: number;
-  createdAt: Date;
-};
+import { FormCardProps } from "@/types/form-card";
 
 export default function FormCard({
   id,

@@ -4,16 +4,10 @@ import { Question } from "@prisma/client";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import FormChatInterface, { FormCompletionData } from "./FormChatInterface";
+import FormChatInterface from "./FormChatInterface";
+import { FormCompletionData } from "@/types/form-chat-interface";
 
-type FormPreviewProps = {
-  form: {
-    id: string;
-    title: string;
-    description: string | null;
-    questions: Question[];
-  };
-};
+import { FormPreviewProps } from "@/types/form-preview";
 
 export default function FormPreview({ form }: FormPreviewProps) {
   const router = useRouter();

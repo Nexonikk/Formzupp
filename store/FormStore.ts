@@ -1,33 +1,13 @@
 import { create } from "zustand";
 
-export type FieldType =
-  | "shortText"
-  | "longText"
-  | "number"
-  | "email"
-  | "phone"
-  | "calendar";
-
-export interface Question {
-  content: string;
-  required: boolean;
-  type: FieldType;
-}
-
-export interface FormGeneration {
-  id?: string | null;
-  title: string;
-  description: string;
-  questions: Question[];
-  originalPrompt?: string;
-}
+import { Question, FormGeneration } from "@/types/form-store";
 
 export const useFormStore = create<{
   id: string | null;
   title: string;
   description: string;
   questions: Question[];
-  originalPrompt: string;
+  originalPrompt: string | null;
   setGeneratedForm: (formData: FormGeneration) => void;
   resetForm: () => void;
 }>((set) => ({

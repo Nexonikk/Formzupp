@@ -8,24 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar } from "@/components/ui/avatar";
 import { Send, Bot, User } from "lucide-react";
 
-interface Message {
-  id: string;
-  source: "system" | "user";
-  content: React.ReactNode;
-}
-
-export interface FormCompletionData {
-  answers: { questionId: string; text: string }[];
-  respondentName: string;
-  respondentEmail: string;
-}
-
-interface FormChatInterfaceProps {
-  formTitle: string;
-  formDescription: string | null;
-  questions: Question[];
-  onComplete: (data: FormCompletionData) => Promise<void>;
-}
+import { Message, FormCompletionData, FormChatInterfaceProps } from "@/types/form-chat-interface";
 
 export default function FormChatInterface({
   formTitle,

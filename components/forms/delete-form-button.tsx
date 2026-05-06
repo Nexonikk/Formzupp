@@ -5,9 +5,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-type DeleteFormButtonProps = {
-  formId: string;
-};
+import { DeleteFormButtonProps } from "@/types/delete-form-button";
 
 export default function DeleteFormButton({ formId }: DeleteFormButtonProps) {
   const [isDeleting, setIsDeleting] = useState(false);

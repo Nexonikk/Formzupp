@@ -17,18 +17,7 @@ import React, { useEffect, useId, useRef, useState } from "react";
  * @param {string} [className] - Additional CSS classes to apply to the SVG container
  * @param {boolean} [glow=false] - Whether dots should have a glowing animation effect
  */
-interface DotPatternProps extends React.SVGProps<SVGSVGElement> {
-  width?: number;
-  height?: number;
-  x?: number;
-  y?: number;
-  cx?: number;
-  cy?: number;
-  cr?: number;
-  className?: string;
-  glow?: boolean;
-  [key: string]: unknown;
-}
+import { DotPatternProps } from "@/types/dot-pattern";
 
 /**
  * DotPattern Component

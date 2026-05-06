@@ -4,20 +4,7 @@ import { ComponentPropsWithoutRef, ReactNode } from "react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 
-interface BentoGridProps extends ComponentPropsWithoutRef<"div"> {
-  children: ReactNode;
-  className?: string;
-}
-
-interface BentoCardProps extends ComponentPropsWithoutRef<"div"> {
-  name: string;
-  className: string;
-  background: ReactNode;
-  Icon: React.ElementType;
-  description: string;
-  href: string;
-  cta: string;
-}
+import { BentoGridProps, BentoCardProps } from "@/types/bento-grid";
 
 const BentoGrid = ({ children, className, ...props }: BentoGridProps) => {
   return (

@@ -2,12 +2,10 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
-  provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-
 model User {
   id        String   @id
   email     String   @unique
@@ -57,7 +55,7 @@ model Answer {
   questionId   String
   question     Question      @relation(fields: [questionId], references: [id], onDelete: Cascade)
   responseId   String
-  formResponse FormResponse? @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  formResponse FormResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }

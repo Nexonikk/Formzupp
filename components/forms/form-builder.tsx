@@ -10,20 +10,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useFormStore } from "@/store/FormStore";
 
-type Question = {
-  id: string;
-  text: string;
-};
-
-type FormBuilderProps = {
-  initialData?: {
-    id?: string;
-    title: string;
-    description: string | null;
-    questions: Question[];
-  };
-  isEditing?: boolean;
-};
+import { FormBuilderProps, FormBuilderQuestion } from "@/types/form-builder";
 
 const emptyFormState = {
   id: "",

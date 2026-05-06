@@ -11,9 +11,7 @@ import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-interface PageProps {
-  params: Promise<{ formId: string }>;
-}
+import { PageProps } from "@/types/dashboard-forms-page";
 
 export default async function FormDetailsPage({ params }: PageProps) {
   const { userId, redirectToSignIn } = await auth();

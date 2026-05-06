@@ -1,13 +1,10 @@
 import { removeAdditionalProperties } from "@/lib/helper";
 import { getFormGenPrompt } from "@/lib/prompt";
-import { FormGeneration, formGenerationSchema } from "@/lib/schema";
+import { formGenerationSchema } from "@/lib/schema";
+import { FormGeneration } from "@/types/schema";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
-// Define a common interface for the response to ensure consistency.
-interface AIResponse {
-  data: FormGeneration;
-  provider: "gemini" | "mistral";
-}
+import { AIResponse } from "@/types/api";
 
 //  * Calls the Google Gemini API to generate form questions.
 async function callGeminiAPI(

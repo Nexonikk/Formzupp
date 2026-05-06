@@ -5,18 +5,8 @@ import { Input } from "../ui/input";
 import FormCard from "./form-card";
 import CreateFormButton from "../prompt-modal/create-form-button";
 
-type Form = {
-  id: string;
-  title: string;
-  description: string | null;
-  createdAt: Date;
-  _count: {
-    responses: number;
-  };
-};
-type FormListProps = {
-  forms: Form[];
-};
+import { FormListProps, FormListItem } from "@/types/form-list";
+
 export default function FormList({ forms }: FormListProps) {
   const [searchValue, setSearchValue] = useState<string>("");
 
